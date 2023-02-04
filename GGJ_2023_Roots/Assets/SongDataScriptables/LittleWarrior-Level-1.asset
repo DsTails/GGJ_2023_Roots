@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1af97bb144734644883fa98603a4e3f3, type: 3}
+  m_Name: LittleWarrior-Level-1
+  m_EditorClassIdentifier: 
+  songClip: {fileID: 8300000, guid: f32a1c07620c46445b93c099dacb1a75, type: 3}
+  tempoMapLocation: LittleWarrior_Map.mid
+  songName: Little Warrior Level 1
+  songDescription: The rumbling tones of a budding uprising of steel!
