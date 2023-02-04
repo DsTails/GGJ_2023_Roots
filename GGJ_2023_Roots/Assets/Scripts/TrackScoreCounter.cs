@@ -2,9 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class TrackScoreCounter : Subject, IObserver
 {
     [SerializeField] Subject _trackSubject;
+
+    
 
     public int currentScore;
     public int currentMultiplier;

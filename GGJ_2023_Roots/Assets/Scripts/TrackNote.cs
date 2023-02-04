@@ -9,16 +9,36 @@ public class TrackNote : Subject
 
     NoteEnum noteData;
 
+    double spawnedTime;
+
+    public float spawnedYPos;
+    public float failedYPos;
+
     // Start is called before the first frame update
     void Start()
     {
+        spawnedTime = TrackScroller.GetAudioSourceTime();
         
     }
 
     // Update is called once per frame
     void Update()
     {
+        double lifeTime = TrackScroller.GetAudioSourceTime() - spawnedTime;
+
+        float t = (float)(lifeTime / (2 * 2));
+
         
+
+        if(t > 1)
+        {
+
+        }
+        else
+        {
+            
+            transform.localPosition = Vector3.Lerp(Vector3.up * spawnedYPos, Vector3.up * failedYPos, t);
+        }
     }
 
     public void TriggerNote(InputAction.CallbackContext context)
