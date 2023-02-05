@@ -14,7 +14,7 @@ AnimatorStateMachine:
     m_Position: {x: 423.5279, y: 305.08038, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -115234772139375097}
-    m_Position: {x: 520.80756, y: 443.31976, z: 0}
+    m_Position: {x: 520, y: 450, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
@@ -32,7 +32,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: DaveIdle
+  m_Name: Idle
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -58,7 +58,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: DaveDrums
+  m_Name: Playing
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []

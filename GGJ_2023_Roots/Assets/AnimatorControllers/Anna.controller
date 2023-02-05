@@ -1,13 +1,13 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1102 &-8783016801453136944
+--- !u!1102 &-7922040715231127353
 AnimatorState:
   serializedVersion: 6
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: AnnaGAnim
+  m_Name: AnnaG
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -20,20 +20,20 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 6fce0605e5ccef447b305018a61e38fe, type: 2}
+  m_Motion: {fileID: 7400000, guid: b3ed66ba4cc73414f88f72be38019b9d, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
---- !u!1102 &-6664602337036242599
+--- !u!1102 &-6755798545286374975
 AnimatorState:
   serializedVersion: 6
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: AnnaEAnim
+  m_Name: AnnaA
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -46,20 +46,20 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 38ec34a6537f0544ab0dacf7aa6831b1, type: 2}
+  m_Motion: {fileID: 7400000, guid: 9294c13649a9a5e409ad3fb4bf186605, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
---- !u!1102 &-2280948036514919113
+--- !u!1102 &-6438337815600531627
 AnimatorState:
   serializedVersion: 6
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: AnnaDAnim
+  m_Name: Idle
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -72,20 +72,20 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: dbfe3e5c8c114dc4e84f7517daa10a27, type: 2}
+  m_Motion: {fileID: 7400000, guid: 5b58acfb8c60fd24abf8777cd551039e, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
---- !u!1102 &-1046928406343269427
+--- !u!1102 &-3946863167528971891
 AnimatorState:
   serializedVersion: 6
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: AnnaAAnim
+  m_Name: AnnaE
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -98,7 +98,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 5b110228980b67d48bed7d68360f1262, type: 2}
+  m_Motion: {fileID: 7400000, guid: bffb0b2206c8a4346a3c06e834fac4c1, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -136,20 +136,20 @@ AnimatorStateMachine:
   m_Name: Base Layer
   m_ChildStates:
   - serializedVersion: 1
-    m_State: {fileID: 1648796551955091736}
-    m_Position: {x: 516.311, y: 345.5335, z: 0}
+    m_State: {fileID: -6438337815600531627}
+    m_Position: {x: 250, y: 180, z: 0}
   - serializedVersion: 1
-    m_State: {fileID: -1046928406343269427}
-    m_Position: {x: 420, y: 600, z: 0}
+    m_State: {fileID: -6755798545286374975}
+    m_Position: {x: 100, y: 290, z: 0}
   - serializedVersion: 1
-    m_State: {fileID: -2280948036514919113}
-    m_Position: {x: 420, y: 640, z: 0}
+    m_State: {fileID: 1868834699424367730}
+    m_Position: {x: 100, y: 340, z: 0}
   - serializedVersion: 1
-    m_State: {fileID: -6664602337036242599}
-    m_Position: {x: 420, y: 680, z: 0}
+    m_State: {fileID: -3946863167528971891}
+    m_Position: {x: 320, y: 340, z: 0}
   - serializedVersion: 1
-    m_State: {fileID: -8783016801453136944}
-    m_Position: {x: 420, y: 720, z: 0}
+    m_State: {fileID: -7922040715231127353}
+    m_Position: {x: 320, y: 290, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
@@ -159,15 +159,15 @@ AnimatorStateMachine:
   m_EntryPosition: {x: 50, y: 120, z: 0}
   m_ExitPosition: {x: 800, y: 120, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
-  m_DefaultState: {fileID: 1648796551955091736}
---- !u!1102 &1648796551955091736
+  m_DefaultState: {fileID: -6438337815600531627}
+--- !u!1102 &1868834699424367730
 AnimatorState:
   serializedVersion: 6
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: AnnaIdleAnim
+  m_Name: AnnaD
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -180,7 +180,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 9f33a7ed358e08c4799d1b319493172e, type: 2}
+  m_Motion: {fileID: 7400000, guid: e0b1fff8a6e093744a23a406a1fd9121, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 

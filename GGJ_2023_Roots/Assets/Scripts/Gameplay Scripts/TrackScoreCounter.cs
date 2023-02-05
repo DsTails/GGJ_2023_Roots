@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using TMPro;
 
 public class TrackScoreCounter : Subject, IObserver
@@ -8,6 +9,8 @@ public class TrackScoreCounter : Subject, IObserver
     [SerializeField] Subject _trackSubject;
     [SerializeField] TextMeshProUGUI _scoreText;
     [SerializeField] TextMeshProUGUI _comboText;
+    [SerializeField] TextMeshProUGUI _audienceMoodText;
+    [SerializeField] TextMeshProUGUI _bandMoodText;
 
     [SerializeField] GameObject _resultsScreen;
     [SerializeField] TextMeshProUGUI _normalHitsText;
@@ -18,8 +21,14 @@ public class TrackScoreCounter : Subject, IObserver
     [SerializeField] TextMeshProUGUI _rankText;
     [SerializeField] TextMeshProUGUI _finalScoreText;
 
+    [SerializeField] GameObject _gameOverScreen;
+    [SerializeField] TextMeshProUGUI _gameOverText;
+
     public int currentScore;
     public float currentMultiplier;
+
+    public float bandMood;
+    public float audienceMood;
 
     public int scorePerNote = 100;
     public int scorePerGoodNote = 150;
@@ -31,7 +40,11 @@ public class TrackScoreCounter : Subject, IObserver
     public int thresholdTracker;
     public int comboNum;
 
+    public float soloInterval;
+    float _soloIntervalTime;
 
+    bool _songActive;
+    bool _soloActive;
     int _normalHits;
     int _goodHits;
     int _perfectHits;
@@ -52,22 +65,112 @@ public class TrackScoreCounter : Subject, IObserver
     {
         _comboText.text = $"Combo: {comboNum}";
         _scoreText.text = $"Score: {currentScore}";
+        _soloIntervalTime = soloInterval;
+
+        bandMood = 50.0f;
+        audienceMood = 50.0f;
+        _bandMoodText.text = $"Band Mood: {bandMood.ToString("F1")}%";
+        _audienceMoodText.text = $"Audience Mood: {bandMood.ToString("F1")}%";
+
+        _soloIntervalTime = soloInterval;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (_songActive)
+        {
+            if (_soloIntervalTime > 0)
+            {
+                _soloIntervalTime -= 1 * Time.deltaTime;
+            }
+            else
+            {
+                if (_soloActive)
+                {
+                    UpdateSoloValues(-5f, 2.5f);
+                }
+                else
+                {
+                    UpdateSoloValues(2.5f, -5f);
+                }
+
+                _soloIntervalTime = soloInterval;
+            }
+        }
+    }
+
+    void UpdateSoloValues(float bandValChange, float audienceValChange)
+    {
+        bandMood += bandValChange;
+        audienceMood += audienceValChange;
+
+        if(bandMood <= 0.0f)
+        {
+            bandMood = 0.0f;
+        } else if(bandMood >= 100.0f)
+        {
+            bandMood = 100.0f;
+        }
+
+        if(audienceMood <= 0.0f)
+        {
+            audienceMood = 0.0f;
+        } else if(audienceMood >= 100.0f)
+        {
+            audienceMood = 100.0f;
+        }
+
+        _bandMoodText.text = $"Band Mood: {bandMood.ToString("F1")}%";
+        _audienceMoodText.text = $"Audience Mood: {audienceMood.ToString("F1")}%";
+
+        CheckMoodValues();
+    }
+
+    void CheckMoodValues()
+    {
+        if(bandMood <= 0.0f || audienceMood <= 0.0f)
+        {
+            //Game Over
+            _songActive = false;
+            if (!_gameOverScreen.activeInHierarchy)
+            {
+                _gameOverScreen.SetActive(true);
+                if(bandMood <= 0.0f)
+                {
+                    _gameOverText.text = "We told you to stick to the root notes! \n You're out!";
+                }
+                else
+                {
+                    _gameOverText.text = "The audience got bored and decided to leave...";
+                }
+            }
+
+        }
+    }
+
+    public void SoloTrigger(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            _soloActive = true;
+        }
+        else if (context.canceled)
+        {
+            _soloActive = false;
+        }
     }
 
     public void OnNotify(NoteEnum noteData)
     {
-        if (noteData != NoteEnum.songEnd)
+        if (noteData != NoteEnum.songEnd && noteData != NoteEnum.songStart)
         {
             ChangeScore(noteData);
         }
-        else
+        else if(noteData == NoteEnum.songEnd)
         {
+            _songActive = false;
+
             if (!_resultsScreen.activeInHierarchy)
             {
                 _resultsScreen.SetActive(true);
@@ -76,6 +179,7 @@ public class TrackScoreCounter : Subject, IObserver
                 _goodHitsText.text = $"Good Hits: {_goodHits}";
                 _perfectHitsText.text = $"Perfect Hits: {_perfectHits}";
                 _missHitsText.text = $"Misses Hits: {_missedHits}";
+                _finalScoreText.text = $"Final Score: {currentScore}";
 
                 int totalHits = _normalHits + _goodHits + _perfectHits + _missedHits;
 
@@ -118,6 +222,9 @@ public class TrackScoreCounter : Subject, IObserver
 
 
             }
+        } else if(noteData == NoteEnum.songStart)
+        {
+            _songActive = true;
         }
     }
 

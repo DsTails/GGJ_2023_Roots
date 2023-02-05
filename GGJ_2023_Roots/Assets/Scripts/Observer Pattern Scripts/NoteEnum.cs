@@ -8,5 +8,6 @@ public enum NoteEnum
     good,
     perfect,
     miss,
-    songEnd
+    songEnd,
+    songStart
 }
