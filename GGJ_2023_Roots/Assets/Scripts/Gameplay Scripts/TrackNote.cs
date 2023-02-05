@@ -26,7 +26,7 @@ public class TrackNote : Subject
     {
         double lifeTime = TrackScroller.GetAudioSourceTime() - spawnedTime;
 
-        float t = (float)(lifeTime / (2 * 2));
+        float t = (float)(lifeTime / (1.45 * 2));
 
         
 
@@ -54,12 +54,12 @@ public class TrackNote : Subject
 
                 Destroy(this.gameObject);
 
-                if (Mathf.Abs(transform.position.z) > .25f)
+                if (Mathf.Abs(transform.position.y) > .25f)
                 {
                     Debug.Log("Hit!");
                     noteData = NoteEnum.normal;
                     //Ok
-                } else if(Mathf.Abs(transform.position.z) > 0.05)
+                } else if(Mathf.Abs(transform.position.y) > 0.05)
                 {
                     //Good
                     Debug.Log("Jamming!");

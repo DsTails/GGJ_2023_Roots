@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.SceneManagement;
 using Melanchall.DryWetMidi.Core;
 using Melanchall.DryWetMidi.Interaction;
 using System.IO;
@@ -121,6 +122,16 @@ public class TrackScroller : Subject, IObserver
 
             StartCoroutine(EndSongCo());
         }
+    }
+
+    public void RestartSong()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void ReturnToSongMenu()
+    {
+        SceneManager.LoadScene("SongSelect");
     }
 
     void ReadFromFile()
