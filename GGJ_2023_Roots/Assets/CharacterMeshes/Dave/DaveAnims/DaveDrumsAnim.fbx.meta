@@ -11,12 +11,12 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Dave
-    second: {fileID: 2100000, guid: 1d103603bd8683449b5e026e645ff438, type: 2}
+    second: {fileID: 2100000, guid: 07de6a1c4a347b546a03f3a3f0e54748, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: drums
-    second: {fileID: 2100000, guid: 07f4874abcc8575488d7b11dfe28a341, type: 2}
+    second: {fileID: 2100000, guid: 150919abfc008d847a502e46bd9c3b1b, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

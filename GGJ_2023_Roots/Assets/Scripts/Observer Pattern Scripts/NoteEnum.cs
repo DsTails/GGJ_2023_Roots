@@ -9,5 +9,6 @@ public enum NoteEnum
     perfect,
     miss,
     songEnd,
-    songStart
+    songStart,
+    noteDestroyed
 }

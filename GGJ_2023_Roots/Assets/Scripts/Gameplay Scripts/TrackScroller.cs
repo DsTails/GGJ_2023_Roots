@@ -24,6 +24,11 @@ public class TrackScroller : Subject, IObserver
 
     public static AudioSource _as;
 
+    public AudioSource bassAs;
+
+    public AudioClip bassNormalClip;
+    public AudioClip bassSoloClip;
+
     public float songDelay;
 
     [SerializeField] TextMeshProUGUI _countdownText;
@@ -42,6 +47,9 @@ public class TrackScroller : Subject, IObserver
         if (SongSelectData.loadedSong != null)
         {
             _as.clip = SongSelectData.loadedSong;
+            bassAs.clip = SongSelectData.loadedNormalBass;
+            bassNormalClip = SongSelectData.loadedNormalBass;
+            bassSoloClip = SongSelectData.loadedSoloBass;
             fileLocation = SongSelectData.tempoMapLocation;
         }
 
@@ -63,7 +71,7 @@ public class TrackScroller : Subject, IObserver
 
     public void OnNotify(NoteEnum noteData)
     {
-        if (noteData != NoteEnum.songEnd)
+        if (noteData != NoteEnum.songEnd && noteData != NoteEnum.noteDestroyed)
         {
             //Potentially call
             //Debug.Log($"NOTE DATA: {noteData.ToString()}");
@@ -74,13 +82,33 @@ public class TrackScroller : Subject, IObserver
 
             CheckNoteCount();
         }
+        else if(noteData == NoteEnum.songEnd)
+        {
+            Debug.Log("SONG ENDED");
+            _as.Stop();
+        }
         else
         {
-            _as.Stop();
+            noteCount++;
+            CheckNoteCount();
         }
     }
 
-    
+    public void TriggerSolo(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            bassAs.clip = bassSoloClip;
+            bassAs.Play();
+            bassAs.time = _as.time;
+            
+        } else if (context.canceled)
+        {
+            bassAs.clip = bassNormalClip;
+            bassAs.Play();
+            bassAs.time = _as.time;
+        }
+    }
 
     public void CheckLaneTracks()
     {
@@ -168,6 +196,7 @@ public class TrackScroller : Subject, IObserver
     {
         NotifyObservers(NoteEnum.songStart);
         _as.Play();
+        bassAs.Play();
     }
 
     IEnumerator EndSongCo()

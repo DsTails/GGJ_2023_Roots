@@ -52,6 +52,8 @@ public class SongMenu : MonoBehaviour
     {
         SongSelectData.loadedSong = _selectedSong.songClip;
         SongSelectData.tempoMapLocation = _selectedSong.tempoMapLocation;
-        SceneManager.LoadScene("SongStage");
+        SongSelectData.loadedNormalBass = _selectedSong.bassClipNormal;
+        SongSelectData.loadedSoloBass = _selectedSong.bassClipSolo;
+        SceneManager.LoadScene("HowToPlay");
     }
 }

@@ -24,6 +24,11 @@ public class TrackScoreCounter : Subject, IObserver
     [SerializeField] GameObject _gameOverScreen;
     [SerializeField] TextMeshProUGUI _gameOverText;
 
+    public AudioSource _as;
+    public AudioClip crowdHappy;
+    public AudioClip crowdSad;
+    bool happySet;
+
     public int currentScore;
     public float currentMultiplier;
 
@@ -50,6 +55,10 @@ public class TrackScoreCounter : Subject, IObserver
     int _perfectHits;
     int _missedHits;
 
+    int totalNoteCount;
+
+    [SerializeField] Lane[] _lanes;
+
     private void OnEnable()
     {
         _trackSubject.AddObserver(this);
@@ -67,12 +76,13 @@ public class TrackScoreCounter : Subject, IObserver
         _scoreText.text = $"Score: {currentScore}";
         _soloIntervalTime = soloInterval;
 
-        bandMood = 50.0f;
-        audienceMood = 50.0f;
+        bandMood = 75.0f;
+        audienceMood = 65.0f;
         _bandMoodText.text = $"Band Mood: {bandMood.ToString("F1")}%";
         _audienceMoodText.text = $"Audience Mood: {bandMood.ToString("F1")}%";
 
         _soloIntervalTime = soloInterval;
+        //_as.Play();]
     }
 
     // Update is called once per frame
@@ -88,11 +98,11 @@ public class TrackScoreCounter : Subject, IObserver
             {
                 if (_soloActive)
                 {
-                    UpdateSoloValues(-5f, 2.5f);
+                    UpdateSoloValues(-3f, 5f);
                 }
                 else
                 {
-                    UpdateSoloValues(2.5f, -5f);
+                    UpdateSoloValues(5f, -3f);
                 }
 
                 _soloIntervalTime = soloInterval;
@@ -125,6 +135,8 @@ public class TrackScoreCounter : Subject, IObserver
         _audienceMoodText.text = $"Audience Mood: {audienceMood.ToString("F1")}%";
 
         CheckMoodValues();
+        
+
     }
 
     void CheckMoodValues()
@@ -147,6 +159,17 @@ public class TrackScoreCounter : Subject, IObserver
             }
 
         }
+
+        /*
+        if(audienceMood >= 50.0f && !happySet)
+        {
+            _as.clip = crowdHappy;
+            _as.Play();
+        } else if(audienceMood < 50.0f && happySet)
+        {
+            _as.clip = crowdSad;
+            _as.Play();
+        }*/
     }
 
     public void SoloTrigger(InputAction.CallbackContext context)
@@ -175,23 +198,23 @@ public class TrackScoreCounter : Subject, IObserver
             {
                 _resultsScreen.SetActive(true);
 
-                _normalHitsText.text = $"Normal Hits: {_normalHits}";
-                _goodHitsText.text = $"Good Hits: {_goodHits}";
-                _perfectHitsText.text = $"Perfect Hits: {_perfectHits}";
-                _missHitsText.text = $"Misses Hits: {_missedHits}";
+                _normalHitsText.text = $"Ok! Hits: {_normalHits}";
+                _goodHitsText.text = $"Nice! Hits: {_goodHits}";
+                _perfectHitsText.text = $"Perfect! Hits: {_perfectHits}";
+                _missHitsText.text = $"Missed Hits: {_missedHits}";
                 _finalScoreText.text = $"Final Score: {currentScore}";
 
                 int totalHits = _normalHits + _goodHits + _perfectHits + _missedHits;
 
-                Debug.Log(totalHits);
+                //Debug.Log(totalHits);
 
                 int totalHitCount = _normalHits + _goodHits + _perfectHits;
 
-                Debug.Log(totalHitCount);
+                //Debug.Log(totalHitCount);
 
-                float percentHits = ((float)totalHitCount / (float)totalHits) * 100.0f;
+                float percentHits = ((float)totalHitCount / (float)totalNoteCount) * 100.0f;
 
-                Debug.Log(percentHits);
+                //Debug.Log(percentHits);
 
                 _percentHitText.text = percentHits.ToString("F1") + "%";
 
@@ -225,6 +248,7 @@ public class TrackScoreCounter : Subject, IObserver
         } else if(noteData == NoteEnum.songStart)
         {
             _songActive = true;
+            foreach (var lane in _lanes) totalNoteCount += lane.GetTimeStampCount();
         }
     }
 

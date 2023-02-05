@@ -6,6 +6,8 @@ using UnityEngine;
 public class SongData : ScriptableObject
 {
     public AudioClip songClip;
+    public AudioClip bassClipNormal;
+    public AudioClip bassClipSolo;
     public string tempoMapLocation;
 
     public string songName;

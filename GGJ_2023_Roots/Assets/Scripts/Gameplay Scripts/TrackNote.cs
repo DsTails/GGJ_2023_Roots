@@ -14,10 +14,20 @@ public class TrackNote : Subject
     public float spawnedYPos;
     public float failedYPos;
 
+    public AudioClip missClip;
+
+    [SerializeField] GameObject missUI;
+    [SerializeField] GameObject okUI;
+    [SerializeField] GameObject niceUI;
+    [SerializeField] GameObject perfectUI;
+
+    AudioSource _as;
+
     // Start is called before the first frame update
     void Start()
     {
         spawnedTime = TrackScroller.GetAudioSourceTime();
+        _as = GetComponent<AudioSource>();
         Invoke(nameof(EnableMesh), .2f);
     }
 
@@ -32,7 +42,7 @@ public class TrackNote : Subject
 
         if(t > 1)
         {
-
+            //NotifyObservers(NoteEnum.noteDestroyed);
         }
         else
         {
@@ -81,6 +91,7 @@ public class TrackNote : Subject
     void EnableMesh()
     {
         GetComponent<Renderer>().enabled = true;
+        GetComponent<Collider>().enabled = true;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -100,9 +111,11 @@ public class TrackNote : Subject
             pressReady = false;
             if (!_noteHit)
             {
-                Debug.Log("YOU MISSED A NOTE");
+                //Debug.Log("YOU MISSED A NOTE");
                 noteData = NoteEnum.miss;
                 NotifyObservers(noteData);
+                _as.clip = missClip;
+                _as.Play();
             }
         }
     }
