@@ -17,4 +17,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SongStage.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
+  - enabled: 1
+    path: Assets/Scenes/ResultScreen.unity
+    guid: fd8c88316f277d1409a51fa7c69c3388
+  - enabled: 1
+    path: Assets/Scenes/GameOver.unity
+    guid: ccf75613783c2e242a406ed4c48ad3db
   m_configObjects: {}

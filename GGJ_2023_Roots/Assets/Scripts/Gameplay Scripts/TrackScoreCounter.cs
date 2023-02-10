@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using TMPro;
 
 public class TrackScoreCounter : Subject, IObserver
@@ -12,19 +13,8 @@ public class TrackScoreCounter : Subject, IObserver
     [SerializeField] TextMeshProUGUI _audienceMoodText;
     [SerializeField] TextMeshProUGUI _bandMoodText;
 
-    [SerializeField] GameObject _resultsScreen;
-    [SerializeField] TextMeshProUGUI _normalHitsText;
-    [SerializeField] TextMeshProUGUI _goodHitsText;
-    [SerializeField] TextMeshProUGUI _perfectHitsText;
-    [SerializeField] TextMeshProUGUI _missHitsText;
-    [SerializeField] TextMeshProUGUI _percentHitText;
-    [SerializeField] TextMeshProUGUI _rankText;
-    [SerializeField] TextMeshProUGUI _finalScoreText;
-
-    [SerializeField] GameObject _gameOverScreen;
-    [SerializeField] TextMeshProUGUI _gameOverText;
-
     public AudioSource _as;
+    public Animator crowdAnimator;
     public AudioClip crowdHappy;
     public AudioClip crowdSad;
     bool happySet;
@@ -82,7 +72,11 @@ public class TrackScoreCounter : Subject, IObserver
         _audienceMoodText.text = $"Audience Mood: {bandMood.ToString("F1")}%";
 
         _soloIntervalTime = soloInterval;
-        //_as.Play();]
+
+
+        CheckMoodValues();
+
+        _as.Play();
     }
 
     // Update is called once per frame
@@ -145,31 +139,33 @@ public class TrackScoreCounter : Subject, IObserver
         {
             //Game Over
             _songActive = false;
-            if (!_gameOverScreen.activeInHierarchy)
+
+            if(bandMood <= 0.0f)
             {
-                _gameOverScreen.SetActive(true);
-                if(bandMood <= 0.0f)
-                {
-                    _gameOverText.text = "We told you to stick to the root notes! \n You're out!";
-                }
-                else
-                {
-                    _gameOverText.text = "The audience got bored and decided to leave...";
-                }
+                SongScoreData.lostAudience = false;
             }
+            else
+            {
+                SongScoreData.lostAudience = true;
+            }
+            StartCoroutine(LoadGameOverCo());
 
         }
 
-        /*
+        
         if(audienceMood >= 50.0f && !happySet)
         {
+            happySet = true;
             _as.clip = crowdHappy;
             _as.Play();
+            crowdAnimator.Play("Happy");
         } else if(audienceMood < 50.0f && happySet)
         {
+            happySet = false;
             _as.clip = crowdSad;
             _as.Play();
-        }*/
+            crowdAnimator.Play("Sad");
+        }
     }
 
     public void SoloTrigger(InputAction.CallbackContext context)
@@ -186,65 +182,22 @@ public class TrackScoreCounter : Subject, IObserver
 
     public void OnNotify(NoteEnum noteData)
     {
-        if (noteData != NoteEnum.songEnd && noteData != NoteEnum.songStart)
+        if (noteData.ToString().Contains("Hit") || noteData.ToString().Contains("note"))
         {
             ChangeScore(noteData);
         }
-        else if(noteData == NoteEnum.songEnd)
+        else if(noteData.ToString().Contains("End"))
         {
             _songActive = false;
+           
+            SongScoreData.normalHits = _normalHits;
+            SongScoreData.goodHits = _goodHits;
+            SongScoreData.perfectHits = _perfectHits;
+            SongScoreData.missedHits = _missedHits;
+            SongScoreData.finalScore = currentScore;
 
-            if (!_resultsScreen.activeInHierarchy)
-            {
-                _resultsScreen.SetActive(true);
+            StartCoroutine(LoadResultsCo());
 
-                _normalHitsText.text = $"Ok! Hits: {_normalHits}";
-                _goodHitsText.text = $"Nice! Hits: {_goodHits}";
-                _perfectHitsText.text = $"Perfect! Hits: {_perfectHits}";
-                _missHitsText.text = $"Missed Hits: {_missedHits}";
-                _finalScoreText.text = $"Final Score: {currentScore}";
-
-                int totalHits = _normalHits + _goodHits + _perfectHits + _missedHits;
-
-                //Debug.Log(totalHits);
-
-                int totalHitCount = _normalHits + _goodHits + _perfectHits;
-
-                //Debug.Log(totalHitCount);
-
-                float percentHits = ((float)totalHitCount / (float)totalNoteCount) * 100.0f;
-
-                //Debug.Log(percentHits);
-
-                _percentHitText.text = percentHits.ToString("F1") + "%";
-
-                string rankVal = "F";
-
-                if(percentHits > 40f)
-                {
-                    rankVal = "D";
-                    if(percentHits > 55f)
-                    {
-                        rankVal = "C";
-                        if(percentHits > 70f)
-                        {
-                            rankVal = "B";
-                            if(percentHits > 85)
-                            {
-                                rankVal = "A";
-                                if(percentHits > 95)
-                                {
-                                    rankVal = "S";
-                                }
-                            }
-                        }
-                    }
-                }
-
-                _rankText.text = rankVal;
-
-
-            }
         } else if(noteData == NoteEnum.songStart)
         {
             _songActive = true;
@@ -256,26 +209,27 @@ public class TrackScoreCounter : Subject, IObserver
     {
         switch (noteData)
         {
-            case NoteEnum.normal:
+            case NoteEnum.normalHit:
                 currentScore += (int)(scorePerNote * currentMultiplier);
                 _normalHits++;
                 NoteHit();
                 break;
-            case NoteEnum.good:
+            case NoteEnum.goodHit:
                 currentScore += (int)(scorePerGoodNote * currentMultiplier);
                 _goodHits++;
                 NoteHit();
                 break;
-            case NoteEnum.perfect:
+            case NoteEnum.perfectHit:
                 _perfectHits++;
                 currentScore += (int)(scorePerPerfectNote * currentMultiplier);
                 NoteHit();
                 break;
-            case NoteEnum.miss:
+            case NoteEnum.noteMiss:
                 NoteMiss();
                 break;
             default:
-                Debug.Log("NO VALID NOTE DATA CAN BE FOUND");
+                _missedHits++;
+                //Debug.Log("NO VALID NOTE DATA CAN BE FOUND");
                 break;
         }
     }
@@ -300,12 +254,35 @@ public class TrackScoreCounter : Subject, IObserver
             }
         }
     }
-
     void NoteMiss()
     {
         comboNum = 0;
         currentMultiplier = 1;
         _comboText.text = $"Combo: {comboNum}";
         _missedHits++;
+    }
+
+    IEnumerator LoadGameOverCo()
+    {
+        if(UIFade.instance != null)
+        {
+            UIFade.instance.FadeToBlack();
+        }
+
+        yield return new WaitForSeconds(.5f);
+
+        SceneManager.LoadScene("GameOver");
+    }
+
+    IEnumerator LoadResultsCo()
+    {
+        if(UIFade.instance != null)
+        {
+            UIFade.instance.FadeToBlack();
+        }
+
+        yield return new WaitForSeconds(.5f);
+
+        SceneManager.LoadScene("ResultScreen");
     }
 }

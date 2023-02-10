@@ -42,7 +42,8 @@ public class TrackNote : Subject
 
         if(t > 1)
         {
-            //NotifyObservers(NoteEnum.noteDestroyed);
+            NotifyObservers(NoteEnum.noteDestroyed);
+            gameObject.SetActive(false);
         }
         else
         {
@@ -66,20 +67,20 @@ public class TrackNote : Subject
 
                 if (Mathf.Abs(transform.position.y) > .25f)
                 {
-                    Debug.Log("Hit!");
-                    noteData = NoteEnum.normal;
+                    //Debug.Log("Hit!");
+                    noteData = NoteEnum.normalHit;
                     //Ok
                 } else if(Mathf.Abs(transform.position.y) > 0.05)
                 {
                     //Good
-                    Debug.Log("Jamming!");
-                    noteData = NoteEnum.good;
+                    //Debug.Log("Jamming!");
+                    noteData = NoteEnum.goodHit;
                 }
                 else
                 {
                     //Perfect
-                    Debug.Log("Rock-tacular!");
-                    noteData = NoteEnum.perfect;
+                    //Debug.Log("Rock-tacular!");
+                    noteData = NoteEnum.perfectHit;
                 }
 
                 NotifyObservers(noteData);
@@ -112,7 +113,7 @@ public class TrackNote : Subject
             if (!_noteHit)
             {
                 //Debug.Log("YOU MISSED A NOTE");
-                noteData = NoteEnum.miss;
+                noteData = NoteEnum.noteMiss;
                 NotifyObservers(noteData);
                 _as.clip = missClip;
                 _as.Play();

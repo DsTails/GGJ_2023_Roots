@@ -36,6 +36,8 @@ public class TrackScroller : Subject, IObserver
     int noteCountTotal;
     int noteCount;
 
+    bool _songActive;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -61,7 +63,12 @@ public class TrackScroller : Subject, IObserver
     // Update is called once per frame
     void Update()
     {
-        
+        if(_songActive && !_as.isPlaying)
+        {
+            _songActive = false;
+            bassAs.Stop();
+            StartCoroutine(EndSongCo());
+        }
     }
 
     public static double GetAudioSourceTime()
@@ -71,7 +78,8 @@ public class TrackScroller : Subject, IObserver
 
     public void OnNotify(NoteEnum noteData)
     {
-        if (noteData != NoteEnum.songEnd && noteData != NoteEnum.noteDestroyed)
+        /*
+        if (noteData != NoteEnum.songEnd && noteData != NoteEnum.noteDestroyed && noteData != NoteEnum.songStart)
         {
             //Potentially call
             //Debug.Log($"NOTE DATA: {noteData.ToString()}");
@@ -91,22 +99,37 @@ public class TrackScroller : Subject, IObserver
         {
             noteCount++;
             CheckNoteCount();
+        }*/
+
+        if (noteData.ToString().Contains("Hit") || noteData.ToString().Contains("note"))
+        {
+            NotifyObservers(noteData);
+            //noteCount++;
+            //CheckNoteCount();
+        }
+        else if (noteData.ToString().Contains("End"))
+        {
+            _as.Stop();
         }
     }
 
     public void TriggerSolo(InputAction.CallbackContext context)
     {
-        if (context.started)
+        if (_songActive)
         {
-            bassAs.clip = bassSoloClip;
-            bassAs.Play();
-            bassAs.time = _as.time;
-            
-        } else if (context.canceled)
-        {
-            bassAs.clip = bassNormalClip;
-            bassAs.Play();
-            bassAs.time = _as.time;
+            if (context.started)
+            {
+                bassAs.clip = bassSoloClip;
+                bassAs.Play();
+                bassAs.time = _as.time;
+
+            }
+            else if (context.canceled)
+            {
+                bassAs.clip = bassNormalClip;
+                bassAs.Play();
+                bassAs.time = _as.time;
+            }
         }
     }
 
@@ -136,10 +159,14 @@ public class TrackScroller : Subject, IObserver
     {
         if(noteCount >= noteCountTotal)
         {
-
+            Debug.Log("ENDING SONG");
             //NotifyObservers(NoteEnum.songEnd);
 
             StartCoroutine(EndSongCo());
+        }
+        else
+        {
+            Debug.Log(noteCount);
         }
     }
 
@@ -167,9 +194,13 @@ public class TrackScroller : Subject, IObserver
 
         notes.CopyTo(notesArray, 0);
 
+        //Debug.Log(notesArray.Length);
+
         foreach (var lane in _lanes) lane.SetTimeStamps(notesArray);
 
         foreach (var lane in _lanes) noteCountTotal += lane.GetTimeStampCount();
+
+        Debug.Log(noteCountTotal);
 
         Invoke(nameof(StartSong), songDelay);
 
@@ -194,9 +225,11 @@ public class TrackScroller : Subject, IObserver
 
     void StartSong()
     {
+        
         NotifyObservers(NoteEnum.songStart);
         _as.Play();
         bassAs.Play();
+        _songActive = true;
     }
 
     IEnumerator EndSongCo()

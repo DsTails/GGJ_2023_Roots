@@ -16,7 +16,7 @@ public class Subject : MonoBehaviour
         _observers.Remove(observer);
     }
     //
-    protected void NotifyObservers(NoteEnum noteData = NoteEnum.miss)
+    protected void NotifyObservers(NoteEnum noteData = NoteEnum.noteMiss)
     {
         if (_observers.Count != 0)
         {

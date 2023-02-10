@@ -4,10 +4,10 @@ using UnityEngine;
 
 public enum NoteEnum
 {
-    normal,
-    good,
-    perfect,
-    miss,
+    normalHit,
+    goodHit,
+    perfectHit,
+    noteMiss,
     songEnd,
     songStart,
     noteDestroyed

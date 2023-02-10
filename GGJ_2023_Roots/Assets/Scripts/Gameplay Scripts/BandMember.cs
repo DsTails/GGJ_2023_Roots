@@ -35,7 +35,7 @@ public class BandMember : MonoBehaviour, IObserver
         {
             _animator.Play("Idle");
         }
-        else
+        else if(noteData.ToString().Contains("Hit"))
         {
             if(playStates.Length != 0)
             {
